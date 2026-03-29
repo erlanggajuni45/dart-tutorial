@@ -13,17 +13,14 @@ import 'arguments.dart';
 
 class HelpCommand extends Command {
   HelpCommand() {
-    addFlag(
-      'verbose',
-      abbr: 'v',
-      help: 'When true, this command will print each command and its options.'
-    );
-    addOption(
-      'command',
-      abbr: 'c',
-      help: 
-          "When a command is passed as an argument, prints only that command's verbose usage."
-    );
+    addFlag('verbose',
+        abbr: 'v',
+        help:
+            'When true, this command will print each command and its options.');
+    addOption('command',
+        abbr: 'c',
+        help:
+            "When a command is passed as an argument, prints only that command's verbose usage.");
   }
 
   @override
@@ -36,7 +33,7 @@ class HelpCommand extends Command {
   String? get help => 'Prints this usage information';
 
   @override
-  FutureOr<Object?> run(ArgResults args) async {
+  FutureOr<Object?> run(ArgResults arg) async {
     var usage = runner.usage;
     for (var command in runner.commands) {
       usage += '\n ${command.usage}';
