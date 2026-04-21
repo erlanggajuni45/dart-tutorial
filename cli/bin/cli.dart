@@ -1,18 +1,24 @@
+import 'package:cli/cli.dart';
 import 'package:command_runner/command_runner.dart';
 
 const version = '0.0.1';
 
 void main(List<String> arguments) {
-  var commandRunner = CommandRunner(onOutput: (String output) async {
+  final errorLogger = initFileLogger('errors');
+  final app = CommandRunner(onOutput: (String output) async {
     await write(output);
-  }, onError: (Object error) {
+  }, onError: (Object error) async {
     if (error is Error) {
+      errorLogger.severe('[Error] ${error.toString()}\n${error.stackTrace}');
       throw error;
     }
     if (error is Exception) {
-      print(error);
+      errorLogger.warning(error);
     }
   })
-    ..addCommand(HelpCommand());
-  commandRunner.run(arguments);
+    ..addCommand(HelpCommand())
+    ..addCommand(SearchCommand(logger: errorLogger))
+    ..addCommand(GetArticleCommand(logger: errorLogger));
+
+  app.run(arguments);
 }
